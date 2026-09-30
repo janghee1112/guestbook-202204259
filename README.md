@@ -7,14 +7,7 @@ Next.js(App Router) + TypeScript + Route Handlers + Neon Postgres(SQL 직접) + 
 
 ## 실행
 
-```bash
-npm install
-npm run db:init   # Neon 에 entries 테이블 생성 (.env.local 의 DATABASE_URL)
-npm run dev       # http://localhost:3000
-npm test          # 방명록 모듈 테스트 (인메모리 Postgres, Neon 불필요)
-```
-
-`.env.local`: `DATABASE_URL=postgresql://...`
+https://guestbook-202204259.vercel.app
 
 ## API
 
