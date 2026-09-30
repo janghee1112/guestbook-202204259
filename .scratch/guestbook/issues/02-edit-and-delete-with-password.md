@@ -6,7 +6,11 @@
 
 **Status:** ready-for-agent
 
-- [ ] 수정: 맞으면 메시지·updated_at 변경, 틀리면 wrong_password, 없으면 not_found
-- [ ] 삭제: 맞으면 삭제, 틀리면 wrong_password, 없으면 not_found
-- [ ] `PATCH/DELETE /api/entries/[id]` 200/400/403/404
-- [ ] 화면: 상세 패널, 수정·삭제(확인 단계), 틀린 비밀번호 안내
+- [x] 수정: 맞으면 메시지·updated_at 변경, 틀리면 wrong_password, 없으면 not_found
+- [x] 삭제: 맞으면 삭제, 틀리면 wrong_password, 없으면 not_found
+- [x] `PATCH/DELETE /api/entries/[id]` 200/400/403/404
+- [x] 화면: 상세 패널, 수정·삭제(확인 단계), 틀린 비밀번호 안내
+
+## Comments
+
+- 구현 완료. npm test 17개 통과, API 스모크(201/400/403/404) 통과, 데스크톱·모바일(375px) 스크린샷 확인.

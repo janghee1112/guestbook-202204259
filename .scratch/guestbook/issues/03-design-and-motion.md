@@ -6,5 +6,9 @@
 
 **Status:** ready-for-agent
 
-- [ ] 모션 1~5 동작, reduced-motion 대응
-- [ ] 모바일 375px 깨짐 없음, 빌드 성공
+- [x] 모션 1~5 동작, reduced-motion 대응
+- [x] 모바일 375px 깨짐 없음, 빌드 성공
+
+## Comments
+
+- 구현 완료. npm test 17개 통과, API 스모크(201/400/403/404) 통과, 데스크톱·모바일(375px) 스크린샷 확인.
