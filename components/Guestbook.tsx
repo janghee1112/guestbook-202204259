@@ -4,6 +4,7 @@ import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { Entry } from "@/lib/guestbook";
+import { memoHex } from "@/lib/entry-rules";
 import { formatKst } from "@/lib/format";
 import { prefersReducedMotion } from "@/lib/motion";
 import EntryPanel from "./EntryPanel";
@@ -112,13 +113,14 @@ export default function Guestbook({ initialEntries }: { initialEntries: Entry[] 
                       else cardRefs.current.delete(entry.id);
                     }}
                     className={`card ${entry.id === newId ? "card--new" : ""} ${entry.id === openId ? "card--hidden" : ""}`}
+                    style={{ background: memoHex(entry.color) }}
                     onClick={() => setOpenId(entry.id)}
                     aria-label={`${entry.name}님의 글 열기`}
                   >
                     <p className="card__message">{entry.message}</p>
                     <div className="card__meta">
-                      <span className="card__avatar" aria-hidden>
-                        {entry.name.slice(0, 1)}
+                      <span className="card__avatar card__avatar--emoji" aria-hidden>
+                        {entry.emoji}
                       </span>
                       <span className="card__name">{entry.name}</span>
                       <span className="card__time">

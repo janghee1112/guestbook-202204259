@@ -1,5 +1,14 @@
 import type { Db } from "./db-types.ts";
-import { MESSAGE_MAX, NAME_MAX, PASSWORD_MAX, PASSWORD_MIN } from "./entry-rules.ts";
+import {
+  DEFAULT_COLOR,
+  DEFAULT_EMOJI,
+  EMOJIS,
+  MEMO_COLORS,
+  MESSAGE_MAX,
+  NAME_MAX,
+  PASSWORD_MAX,
+  PASSWORD_MIN,
+} from "./entry-rules.ts";
 import { hashPassword, verifyPassword } from "./password.ts";
 
 /** 사용자가 고칠 수 있는 입력 오류. 메시지는 그대로 화면에 보여준다. */
@@ -12,22 +21,34 @@ export type Entry = {
   id: string;
   name: string;
   message: string;
+  /** 프로필 이모지(허용 목록 중 하나) */
+  emoji: string;
+  /** 메모지 색 key(허용 목록 중 하나) */
+  color: string;
   createdAt: string;
   updatedAt: string | null;
 };
 
-export type NewEntry = { name: string; message: string; password: string };
+export type NewEntry = {
+  name: string;
+  message: string;
+  password: string;
+  emoji?: string;
+  color?: string;
+};
 
 export type ChangeOutcome = "ok" | "not_found" | "wrong_password";
 
 const LIST_LIMIT = 100;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-const PUBLIC_COLUMNS = "id, name, message, created_at, updated_at";
+const PUBLIC_COLUMNS = "id, name, message, emoji, color, created_at, updated_at";
 
 type EntryRow = {
   id: string;
   name: string;
   message: string;
+  emoji: string;
+  color: string;
   created_at: Date | string;
   updated_at: Date | string | null;
 };
@@ -37,6 +58,8 @@ function toEntry(row: EntryRow): Entry {
     id: row.id,
     name: row.name,
     message: row.message,
+    emoji: row.emoji,
+    color: row.color,
     createdAt: new Date(row.created_at).toISOString(),
     updatedAt: row.updated_at === null ? null : new Date(row.updated_at).toISOString(),
   };
@@ -61,6 +84,15 @@ function checkPassword(value: unknown): string {
   return value;
 }
 
+/** 허용 목록 안의 값만 받는다. 비어 있으면 기본값. */
+function pickAllowed(value: unknown, allowed: readonly string[], fallback: string, error: string): string {
+  if (value === undefined || value === null || value === "") return fallback;
+  if (typeof value !== "string" || !allowed.includes(value)) {
+    throw new ValidationError(error);
+  }
+  return value;
+}
+
 /** 전체 글을 최신순으로 돌려준다(최대 100개). */
 export async function listEntries(db: Db): Promise<Entry[]> {
   const rows = await db.query<EntryRow>(
@@ -73,11 +105,13 @@ export async function listEntries(db: Db): Promise<Entry[]> {
 export async function createEntry(db: Db, input: NewEntry): Promise<Entry> {
   const name = cleanText(input.name, "name", NAME_MAX);
   const message = cleanText(input.message, "message", MESSAGE_MAX);
+  const emoji = pickAllowed(input.emoji, EMOJIS, DEFAULT_EMOJI, "이모지를 목록에서 골라 주세요.");
+  const color = pickAllowed(input.color, MEMO_COLORS.map((c) => c.key), DEFAULT_COLOR, "메모지 색을 목록에서 골라 주세요.");
   const passwordHash = await hashPassword(checkPassword(input.password));
   const [row] = await db.query<EntryRow>(
-    `insert into entries (name, message, password_hash) values ($1, $2, $3)
+    `insert into entries (name, message, password_hash, emoji, color) values ($1, $2, $3, $4, $5)
      returning ${PUBLIC_COLUMNS}`,
-    [name, message, passwordHash],
+    [name, message, passwordHash, emoji, color],
   );
   return toEntry(row);
 }

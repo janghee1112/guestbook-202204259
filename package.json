@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --experimental-strip-types --test lib/guestbook.test.ts",
+    "test": "node --experimental-strip-types --test lib/guestbook.test.ts lib/format.test.ts",
     "db:init": "node --env-file=.env.local scripts/db-init.mjs"
   },
   "dependencies": {

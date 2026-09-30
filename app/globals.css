@@ -186,3 +186,39 @@ input, textarea { font: inherit; color: inherit; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: 0.01ms !important; animation: none !important; }
 }
+
+/* ---------- emoji + memo color picker ---------- */
+.card__avatar--emoji { background: rgba(255, 255, 255, 0.75); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06); font-size: 20px; }
+.card__avatar--emoji.card__avatar--lg { font-size: 26px; }
+.card { box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.04); }
+.card:hover { box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.04), 0 18px 40px rgba(0, 0, 0, 0.08); }
+.picker { display: grid; gap: 18px; padding-bottom: 6px; border-bottom: 1px solid rgba(0, 0, 0, 0.06); margin-bottom: 4px; }
+.picker__preview {
+  display: flex; align-items: center; gap: 14px; padding: 18px 20px; border-radius: 20px;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05); transition: background 0.4s var(--ease);
+}
+.picker__preview-text { min-width: 0; }
+.picker__preview-text .card__name { margin: 0; }
+.picker__preview-msg { margin: 2px 0 0; font-size: 15px; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.picker__group { border: 0; margin: 0; padding: 0; display: grid; gap: 10px; min-width: 0; }
+.emoji-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 8px; }
+.emoji-opt {
+  aspect-ratio: 1; border-radius: 999px; background: #fff; font-size: 22px; line-height: 1;
+  display: grid; place-items: center; box-shadow: inset 0 0 0 1px var(--line);
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+.emoji-opt:hover { transform: translateY(-2px); }
+.emoji-opt:active { transform: scale(0.92); }
+.emoji-opt.is-on { transform: scale(1.12); box-shadow: 0 0 0 2px var(--accent), 0 6px 16px rgba(0, 113, 227, 0.2); }
+.swatch-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.swatch {
+  width: 36px; height: 36px; border-radius: 999px; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.14);
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+.swatch:hover { transform: translateY(-2px); }
+.swatch.is-on { transform: scale(1.1); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.14), 0 0 0 3px #fff, 0 0 0 5px var(--accent); }
+.emoji-opt:focus-visible, .swatch:focus-visible { outline: 3px solid rgba(0, 113, 227, 0.5); outline-offset: 2px; }
+@media (max-width: 640px) {
+  .emoji-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+}
+.card--new { box-shadow: 0 0 0 2px var(--accent), 0 18px 40px rgba(0, 113, 227, 0.15); }

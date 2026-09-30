@@ -4,7 +4,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 import { createPortal } from "react-dom";
 import gsap from "gsap";
 import type { Entry } from "@/lib/guestbook";
-import { MESSAGE_MAX, PASSWORD_MAX } from "@/lib/entry-rules";
+import { MESSAGE_MAX, PASSWORD_MAX, memoHex } from "@/lib/entry-rules";
 import { formatKst } from "@/lib/format";
 import { lockScroll, prefersReducedMotion } from "@/lib/motion";
 import { shake } from "./shake";
@@ -183,12 +183,12 @@ export default function EntryPanel({ entry, getOrigin, onClose, onUpdated, onDel
   return createPortal(
     <div className="overlay" role="dialog" aria-modal="true" aria-label={`${entry.name}님의 글`}>
       <div ref={backdropRef} className="overlay__backdrop" onClick={() => close()} />
-      <div ref={sheetRef} className="sheet">
+      <div ref={sheetRef} className="sheet" style={{ background: memoHex(entry.color) }}>
         <div ref={contentRef} className="sheet__content">
           <div className="sheet__top">
             <div className="sheet__who">
-              <span className="card__avatar card__avatar--lg" aria-hidden>
-                {entry.name.slice(0, 1)}
+              <span className="card__avatar card__avatar--emoji card__avatar--lg" aria-hidden>
+                {entry.emoji}
               </span>
               <div>
                 <p className="sheet__name">{entry.name}</p>

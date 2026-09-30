@@ -14,6 +14,8 @@ export async function POST(request: Request) {
       name: body.name as string,
       message: body.message as string,
       password: body.password as string,
+      emoji: body.emoji as string | undefined,
+      color: body.color as string | undefined,
     });
     return Response.json(entry, { status: 201 });
   } catch (error) {

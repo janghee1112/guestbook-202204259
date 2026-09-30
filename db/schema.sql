@@ -8,3 +8,7 @@ create table if not exists entries (
 );
 
 create index if not exists entries_created_at_idx on entries (created_at desc);
+
+-- 프로필 이모지 + 메모지 색 (뒤로 호환: 기존 글은 기본값)
+alter table entries add column if not exists emoji text not null default '😀';
+alter table entries add column if not exists color text not null default 'white';

@@ -126,3 +126,48 @@ test("같은 비밀번호라도 글마다 다른 해시로 저장되어 서로�
   assert.equal(rows.length, 1);
   assert.ok(!rows[0].password_hash.includes("other"));
 });
+
+test("고른 이모지와 메모지 색이 저장되고 목록에 나온다", async () => {
+  const db = await createTestDb();
+  const entry = await createEntry(db, { ...valid, emoji: "🐱", color: "mint" });
+  assert.equal(entry.emoji, "🐱");
+  assert.equal(entry.color, "mint");
+  const [listed] = await listEntries(db);
+  assert.equal(listed.emoji, "🐱");
+  assert.equal(listed.color, "mint");
+});
+
+test("이모지·색을 고르지 않으면 기본값(😀, white)", async () => {
+  const db = await createTestDb();
+  const entry = await createEntry(db, valid);
+  assert.equal(entry.emoji, "😀");
+  assert.equal(entry.color, "white");
+});
+
+test("이 기능 전에 쓴 글(열 값 없이 넣은 행)도 기본값으로 나온다", async () => {
+  const db = await createTestDb();
+  await db.query(`insert into entries (name, message, password_hash) values ('옛글', '예전 글', 'x:y')`);
+  const [old] = await listEntries(db);
+  assert.equal(old.emoji, "😀");
+  assert.equal(old.color, "white");
+});
+
+for (const [name, extra] of [
+  ["허용 목록 밖 이모지", { emoji: "💩" }],
+  ["허용 목록 밖 색", { color: "red" }],
+  ["색에 CSS 값을 넣은 경우", { color: "#000; background:url(x)" }],
+] as const) {
+  test(`${name}이면 글을 남기지 않는다`, async () => {
+    const db = await createTestDb();
+    await assert.rejects(createEntry(db, { ...valid, ...extra }), ValidationError);
+    assert.equal((await listEntries(db)).length, 0);
+  });
+}
+
+test("수정해도 이모지·색은 그대로다", async () => {
+  const db = await createTestDb();
+  const entry = await createEntry(db, { ...valid, emoji: "🚀", color: "lavender" });
+  const result = await updateEntry(db, entry.id, { password: "1234", message: "바뀐 글" });
+  assert.equal(result.entry?.emoji, "🚀");
+  assert.equal(result.entry?.color, "lavender");
+});
