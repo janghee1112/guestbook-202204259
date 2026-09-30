@@ -1,36 +1,31 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Guestbook — 미니 방명록
 
-## Getting Started
+개발자: **이장희** (학번 202204259, 강남대학교 AI전공)
 
-First, run the development server:
+로그인 없이 이름·메시지·비밀번호로 글을 남기고, 글 비밀번호로 내 글만 수정·삭제하는 방명록.
+Next.js(App Router) + TypeScript + Route Handlers + Neon Postgres(SQL 직접) + Vercel. 모션: GSAP ScrollTrigger + Lenis.
+
+## 실행
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run db:init   # Neon 에 entries 테이블 생성 (.env.local 의 DATABASE_URL)
+npm run dev       # http://localhost:3000
+npm test          # 방명록 모듈 테스트 (인메모리 Postgres, Neon 불필요)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`.env.local`: `DATABASE_URL=postgresql://...`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## API
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| 메서드 | 경로 | body | 응답 |
+| --- | --- | --- | --- |
+| GET | /api/entries | – | 200 글 목록(최신순) |
+| POST | /api/entries | `{ name, message, password }` | 201 / 400 |
+| PATCH | /api/entries/[id] | `{ password, message }` | 200 / 400 / 403(비밀번호 불일치) / 404 |
+| DELETE | /api/entries/[id] | `{ password }` | 200 / 403(비밀번호 불일치) / 404 |
 
-## Learn More
+## 문서
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- 용어집 `CONTEXT.md`, 결정 기록 `docs/adr/`, 디자인·모션 `docs/DESIGN.md`
+- 스펙·티켓 `.scratch/guestbook/`
