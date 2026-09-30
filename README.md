@@ -1,6 +1,6 @@
 # Guestbook — 미니 방명록
 
-개발자: **이장희** (학번 202204259, 강남대학교 AI전공)
+개발자: **학생 ㅇㅈㅎ**
 
 로그인 없이 이름·메시지·비밀번호로 글을 남기고, 글 비밀번호로 내 글만 수정·삭제하는 방명록.
 Next.js(App Router) + TypeScript + Route Handlers + Neon Postgres(SQL 직접) + Vercel. 모션: GSAP ScrollTrigger + Lenis.
